@@ -1,9 +1,11 @@
 import { Component } from 'react';
-import './charList.scss';
+import PropTypes from 'prop-types'
+
 import MarvelService from '../../services/MarvelService';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 
+import './charList.scss';
 class CharList extends Component{
     state = {
         charList: [],
@@ -90,6 +92,10 @@ class CharList extends Component{
         </div>
     )
     }
+}
+
+CharList.propTypes = {
+    onCharSelected: PropTypes.func.isRequired
 }
 
 export default CharList;
