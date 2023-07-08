@@ -1,4 +1,4 @@
-import {useState, useEffect } from 'react/cjs/react.production.min';
+import {useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 
 import Spinner from '../spinner/Spinner';
@@ -7,66 +7,67 @@ import Skeleton from '../skeleton/Skeleton'
 import MarvelService from '../../services/MarvelService';
 
 import './charInfo.scss';
-const CharInfo = (props) => {
-    const [char, setChar] = useState(null)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(false)
 
-    const marvelService = new MarvelService()
+const CharInfo = (props) => {
+
+    const [char, setChar] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+
+    const marvelService = new MarvelService();
 
     useEffect(() => {
         updateChar()
-    },[props.charId])
+    }, [props.charId])
 
     const updateChar = () => {
-        const { charId } = props
+        const {charId} = props;
         if (!charId) {
             return;
         }
-
-        onCharLoading()
-
-        marvelService
-            .getCharacter(charId)
+        onCharLoading();
+        marvelService.getCharacter(charId)
             .then(onCharLoaded)
             .catch(onError)
     }
 
     const onCharLoaded = (char) => {
-        setChar(char)
-        setLoading(false)
+        setLoading(false);
+        setChar(char);
     }
 
     const onCharLoading = () => {
-        setLoading(true)
+        setLoading(true);
     }
 
     const onError = () => {
-        setLoading(false)
-        setError(true)
+        setError(true);
+        setLoading(false);
     }
-        
-        const skeleton = char || loading || error ? null : <Skeleton/>
-        const errorMessage = error ? <ErrorMessage /> : null
-        const spinner = loading ? <Spinner /> : null
-        const content = !(loading || error || !char) ? <View char={char}/> : null
 
-        return (
-            <div className="char__info">
-                {skeleton}
-                {errorMessage}
-                {spinner}
-                {content}
-            </div>
-        )
+    const skeleton = char || loading || error ? null : <Skeleton/>;
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !(loading || error || !char) ? <View char={char}/> : null;
+
+    return (
+        <div className="char__info">
+            {skeleton}
+            {errorMessage}
+            {spinner}
+            {content}
+        </div>
+    )
 }
 
-const View = ({ char }) => {
-    const { name, description, wiki, homepage, thumbnail, comics } = char
-    let imgStyle = { 'objectFit': 'cover' }
+const View = ({char}) => {
+    const {name, description, thumbnail, homepage, wiki, comics} = char;
+
+    let imgStyle = {'objectFit' : 'cover'};
     if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
-        imgStyle = { 'objectFit': 'contain' }
+        imgStyle = {'objectFit' : 'contain'};
     }
+
     return (
         <>
             <div className="char__basics">
@@ -86,18 +87,20 @@ const View = ({ char }) => {
             <div className="char__descr">
                 {description}
             </div>
-            <div className="char__comics">Comics: {name}</div>
+            <div className="char__comics">Comics:</div>
             <ul className="char__comics-list">
-                {comics.length > 0 ? null : 'There is no comics whith this comics'}
-                {comics.map((item, i) => {
-                    // eslint-disable-next-line
-                    if(i > 9) return
-                    return (
-                        <li key={i} className="char__comics-item">
-                            {item.name}
-                        </li> 
-                    )                   
-                })}                
+                {comics.length > 0 ? null : 'There is no comics with this character'}
+                {
+                    comics.map((item, i) => {
+                        // eslint-disable-next-line
+                        if (i > 9) return;
+                        return (
+                            <li key={i} className="char__comics-item">
+                                {item.name}
+                            </li>
+                        )
+                    })
+                }                
             </ul>
         </>
     )
